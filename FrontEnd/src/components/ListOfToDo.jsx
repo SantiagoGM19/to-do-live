@@ -27,8 +27,10 @@ const ListOfToDo = () => {
     const onCheckbox = async (event, note) => {
         const checked = event.currentTarget.checked
 
-        let noteWithCheckedboxInformation = {...note,
-        done: checked}
+        let noteWithCheckedboxInformation = {
+            ...note,
+            done: checked
+        }
 
         let noteUpdatedPromise = await fetch(`http://localhost:8081/api/update/note`,
             {
@@ -47,11 +49,18 @@ const ListOfToDo = () => {
         })
     }
 
-    const onDelete = (note) => {
-        dispatch({
-            type: 'remove-note',
-            payload: note
-        })
+    const onDelete = async (note) => {
+        let response = await fetch(`http://localhost:8081/api/delete/note/${note.id}`,
+            {
+                method: 'DELETE'
+            })
+
+        if (response.status === 200) {
+            dispatch({
+                type: 'remove-note',
+                payload: note
+            })
+        }
     }
 
     return (
