@@ -7,12 +7,7 @@ function reducer(state, action) {
             }
             return stateWithAllTheNotes
         case 'add-note':
-            const newNote = {
-                id: Math.floor(Math.random() * 100),
-                message: action.payload.message,
-                title: action.payload.title,
-                done: false
-            }
+            const newNote = action.payload
             const newListOfNotesAddOne = [...state.listOfNotes, newNote]
             const newStateAddNote = {
                 ...state, listOfNotes: newListOfNotesAddOne
@@ -20,12 +15,16 @@ function reducer(state, action) {
             return newStateAddNote
         case 'remove-note':
             const newListOfNotesWithoutPayloadNote = state.listOfNotes.filter(note => note.id !== action.payload.id)
-            const newStateWithNoteDeleted = {...state, listOfNotes: newListOfNotesWithoutPayloadNote}
+            const newStateWithNoteDeleted = { ...state, listOfNotes: newListOfNotesWithoutPayloadNote }
             return newStateWithNoteDeleted
         case 'update-note':
-            const newListOfNotes = state.listOfNotes.filter(note => note.id !== action.payload.id)
-            const newListOfNotesWithNotification = [...newListOfNotes, action.payload]
-            const newStateModifiedCheckbox = { ...state, listOfNotes: newListOfNotesWithNotification }
+            const newListOfNotes = state.listOfNotes.map(note => {
+                if (note.id === action.payload.id) {
+                    return action.payload
+                }
+                return note
+            })
+            const newStateModifiedCheckbox = { ...state, listOfNotes: newListOfNotes}
             return newStateModifiedCheckbox
     }
 }
